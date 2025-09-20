@@ -1,6 +1,6 @@
 # Deep Learning Concepts and Techniques 🤖
 
-This repository provides a detailed overview of fundamental concepts and techniques in deep learning. Each topic includes in-depth explanations, mathematical expressions, and discussions of key methods to help you build a solid theoretical foundation.
+This repository provides a detailed overview of fundamental concepts and techniques in deep learning. Each topic includes in-depth explanations, mathematical expressions, discussions of key methods, along with their advantages and disadvantages to help you build a solid theoretical foundation.
 
 ---
 
@@ -29,96 +29,159 @@ For example:
 
 ## 2. Activation Functions
 
-An **activation function** introduces **non-linearity** into a neural network, allowing it to learn from complex, non-linear relationships in the data. Without activation functions, a neural network would just be a series of linear transformations.
+Activation functions introduce **non-linearity**, enabling networks to learn complex mappings.  
 
 ### Key Activation Functions
 
 - **Sigmoid**  
-  $$\sigma(x) = \frac{1}{1 + e^{-x}}$$  
+  Formula: σ(x) = 1 / (1 + e^(-x))  
+  - ✅ Advantage: Outputs between 0 and 1 → good for probabilities.  
+  - ❌ Disadvantage: Vanishing gradient problem, not zero-centered.  
 
 - **Tanh**  
-  $$\text{tanh}(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$$  
+  Formula: tanh(x) = (e^x - e^(-x)) / (e^x + e^(-x))  
+  - ✅ Advantage: Zero-centered, stronger gradients than sigmoid.  
+  - ❌ Disadvantage: Still suffers from vanishing gradients.  
 
 - **ReLU (Rectified Linear Unit)**  
-  $$\text{ReLU}(x) = \max(0, x)$$  
+  Formula: ReLU(x) = max(0, x)  
+  - ✅ Advantage: Simple, efficient, reduces vanishing gradient.  
+  - ❌ Disadvantage: Dying ReLU problem (neurons stuck at 0).  
 
 - **Leaky ReLU**  
-  $$\text{Leaky ReLU}(x) = \begin{cases} x & \text{if } x > 0 \\ \alpha x & \text{if } x \le 0 \end{cases}$$  
+  Formula:  
+  ```
+  Leaky ReLU(x) = x       if x > 0  
+                  αx      if x ≤ 0
+  ```  
+  - ✅ Advantage: Solves dying ReLU by allowing small negative slope.  
+  - ❌ Disadvantage: α is fixed and may not be optimal.  
 
 - **Parametric ReLU (PReLU)**  
-  $$\text{PReLU}(x) = \begin{cases} x & \text{if } x > 0 \\ \alpha_i x & \text{if } x \le 0 \end{cases}$$  
+  Formula:  
+  ```
+  PReLU(x) = x       if x > 0  
+             αᵢx     if x ≤ 0
+  ```  
+  - ✅ Advantage: Learns negative slope during training.  
+  - ❌ Disadvantage: More parameters → risk of overfitting.  
 
 - **Exponential Linear Unit (ELU)**  
-  $$\text{ELU}(x) = \begin{cases} x & \text{if } x > 0 \\ \alpha(e^x - 1) & \text{if } x \le 0 \end{cases}$$  
+  Formula:  
+  ```
+  ELU(x) = x                if x > 0  
+          α(e^x − 1)        if x ≤ 0
+  ```  
+  - ✅ Advantage: Mean activations closer to 0 → faster learning.  
+  - ❌ Disadvantage: Slightly more computationally expensive.  
 
 - **Softmax**  
-  $$\text{Softmax}(x)_i = \frac{e^{x_i}}{\sum_{j=1}^{K} e^{x_j}}$$  
+  Formula:  
+  ```
+  Softmax(x)_i = exp(x_i) / Σ exp(x_j),  j = 1...K
+  ```  
+  - ✅ Advantage: Outputs probabilities for multi-class classification.  
+  - ❌ Disadvantage: Computationally expensive for large K.  
 
 ---
 
 ## 3. Loss Functions
 
-The **loss function** measures how well a model's predictions align with the actual data. The training objective is to **minimize loss**.  
+The **loss function** measures how well a model's predictions align with the actual values. Training aims to **minimize loss**.
 
 ### Key Loss Functions
 
 - **Mean Squared Error (MSE)**  
-  $$\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$  
+  Formula: MSE = (1/n) Σ (yᵢ − ŷᵢ)²  
+  - ✅ Advantage: Smooth and differentiable.  
+  - ❌ Disadvantage: Sensitive to outliers.  
 
 - **Mean Absolute Error (MAE)**  
-  $$\text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|$$  
+  Formula: MAE = (1/n) Σ |yᵢ − ŷᵢ|  
+  - ✅ Advantage: Robust to outliers.  
+  - ❌ Disadvantage: Not differentiable at 0.  
 
 - **Huber Loss**  
-  $$L_\delta(y, \hat{y}) = \begin{cases} \frac{1}{2}(y-\hat{y})^2 & \text{if } |y-\hat{y}| \le \delta \\ \delta(|y-\hat{y}| - \frac{1}{2}\delta) & \text{otherwise} \end{cases}$$  
+  Formula: Combines MSE (small errors) and MAE (large errors).  
+  - ✅ Advantage: Balances robustness and smoothness.  
+  - ❌ Disadvantage: Requires tuning of δ parameter.  
 
 - **Root Mean Squared Error (RMSE)**  
-  $$\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$$  
+  Formula: RMSE = √MSE  
+  - ✅ Advantage: Error in same units as target.  
+  - ❌ Disadvantage: Still sensitive to outliers.  
 
-- **Binary Cross-Entropy**  
-  $$\text{BCE} = -[y \log(\hat{y}) + (1-y) \log(1-\hat{y})]$$  
+- **Binary Cross-Entropy (BCE)**  
+  Formula: BCE = −[y log(ŷ) + (1 − y) log(1 − ŷ)]  
+  - ✅ Advantage: Well-suited for binary classification.  
+  - ❌ Disadvantage: Requires careful handling of numerical stability.  
 
-- **Categorical Cross-Entropy**  
-  $$\text{CCE} = -\sum_{i=1}^{C} y_i \log(\hat{y}_i)$$  
+- **Categorical Cross-Entropy (CCE)**  
+  Formula: CCE = −Σ yᵢ log(ŷᵢ)  
+  - ✅ Advantage: Standard for multi-class problems.  
+  - ❌ Disadvantage: Requires one-hot encoding.  
 
-- **Sparse Categorical Cross-Entropy** → works with integer labels instead of one-hot vectors.  
+- **Sparse Categorical Cross-Entropy**  
+  - ✅ Advantage: Avoids one-hot encoding (uses integer labels).  
+  - ❌ Disadvantage: Limited to categorical targets.  
 
 ---
 
 ## 4. Optimizers
 
-An **optimizer** updates weights and biases to reduce the loss.  
+Optimizers update weights to reduce loss.  
 
 ### Key Optimizers
 
 - **Gradient Descent**  
-  $$w_{t+1} = w_t - \eta \cdot \nabla J(w_t)$$  
+  Formula: w(t+1) = w(t) − η ∇J(w)  
+  - ✅ Advantage: Theoretical foundation, guaranteed convergence with proper step size.  
+  - ❌ Disadvantage: Very slow for large datasets.  
 
-- **Stochastic Gradient Descent (SGD)** → updates weights per sample.  
+- **Stochastic Gradient Descent (SGD)**  
+  - ✅ Advantage: Faster updates, less memory use.  
+  - ❌ Disadvantage: Noisy updates, may oscillate.  
 
-- **Mini-Batch SGD** → updates weights per batch.  
+- **Mini-Batch SGD**  
+  - ✅ Advantage: Balance of speed and stability.  
+  - ❌ Disadvantage: Requires choosing batch size.  
 
-- **SGD with Momentum** → adds momentum to speed up convergence.  
+- **SGD with Momentum**  
+  - ✅ Advantage: Accelerates convergence, reduces oscillations.  
+  - ❌ Disadvantage: Extra hyperparameter (momentum).  
 
-- **Adagrad (Adaptive Gradient)** → adaptive learning rates.  
+- **Adagrad**  
+  - ✅ Advantage: Adapts learning rate for each parameter.  
+  - ❌ Disadvantage: Learning rate shrinks too much over time.  
 
-- **RMSprop** → exponential decay of squared gradients.  
+- **RMSprop**  
+  - ✅ Advantage: Good for non-stationary problems, stable.  
+  - ❌ Disadvantage: Still needs hyperparameter tuning.  
 
-- **Adam (Adaptive Moment Estimation)** → combines RMSprop + momentum.  
+- **Adam**  
+  - ✅ Advantage: Combines momentum + adaptive rates → fast and popular.  
+  - ❌ Disadvantage: Sometimes overfits, may generalize poorly.  
 
 ---
 
 ## 5. Weight Initialization Techniques
 
-Proper initialization is crucial to avoid **exploding/vanishing gradients**.  
+Proper initialization prevents **vanishing/exploding gradients**.  
 
 ### Key Techniques
 
-- **Uniform Distribution** → simple random initialization.  
+- **Uniform Distribution**  
+  - ✅ Advantage: Simple and fast.  
+  - ❌ Disadvantage: May cause unstable gradients.  
 
-- **Xavier/Glorot Initialization** (for Sigmoid/Tanh):  
-  $$\text{Var}(W) = \frac{2}{n_{in} + n_{out}}$$  
+- **Xavier/Glorot Initialization** (for Sigmoid/Tanh)  
+  Formula: Var(W) = 2 / (n_in + n_out)  
+  - ✅ Advantage: Balances gradients across layers.  
+  - ❌ Disadvantage: Not optimal for ReLU networks.  
 
-- **He Initialization** (for ReLU):  
-  $$\text{Var}(W) = \frac{2}{n_{in}}$$  
+- **He Initialization** (for ReLU)  
+  Formula: Var(W) = 2 / n_in  
+  - ✅ Advantage: Prevents dying ReLU problem.  
+  - ❌ Disadvantage: May still suffer if architecture is very deep.  
 
 ---
